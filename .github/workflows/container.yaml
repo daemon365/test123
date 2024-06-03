@@ -24,11 +24,11 @@ jobs:
 
       - name: Build OCI image
         run: |
-          podman build -f deploy/Dockerfile -t ghcr.io/daemon365/${{ github.repository }}:${{ github.ref_name }} .
+          podman build -f deploy/Dockerfile -t ghcr.io/${{ github.repository }}:${{ github.ref_name }} .
 
       - name: Push OCI image
         run: |
-          podman push ghcr.io/daemon365/${{ github.repository }}:${{ github.ref_name }}
+          podman push ghcr.io/${{ github.repository }}:${{ github.ref_name }}
 
       - name: Log out from GitHub Container Registry
         run: |
