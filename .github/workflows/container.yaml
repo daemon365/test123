@@ -3,7 +3,7 @@ name: Build and Push OCI Image on Tag
 on:
   push:
     tags:
-      - '*'  # 任何标签都会触发
+      - '*'  # Trigger on any tag
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Login to GitHub Container Registry
         run: |
-          echo "${{ secrets.GHCR_PAT }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.GHCR_PAT }}" | podman login ghcr.io -u ${{ secrets.GHCR_USER }} --password-stdin
 
       - name: Build OCI image
         run: |
