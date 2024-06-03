@@ -1,0 +1,35 @@
+name: Build and Push OCI Image on Tag
+
+on:
+  push:
+    tags:
+      - '*'  # 任何标签都会触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Buildah
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install buildah
+
+      - name: Login to GitHub Container Registry
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | buildah login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build OCI image
+        run: |
+          buildah bud -f deploy/Dockerfile -t ghcr.io/daemon365/${{ github.repository }}:${{ github.ref_name }} .
+
+      - name: Push OCI image
+        run: |
+          buildah push ghcr.io/daemon365/${{ github.repository }}:${{ github.ref_name }}
+
+      - name: Log out from GitHub Container Registry
+        run: |
+          buildah logout ghcr.io
